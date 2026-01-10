@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
@@ -9,355 +9,1017 @@
           event.preventDefault();
           var hash = this.hash;
           $('html, body').animate({
-            scrollTop: $(hash).offset().top
-          }, 800, function(){
-            window.location.hash = hash;
-          });
+            scrollTop: $(hash).offset().top - 80
+          }, 1000, 'easeInOutCubic');
         }
       });
     });
     </script>
+    <script>
+    (function() {
+        try {
+            var saved = localStorage.getItem('theme');
+            var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            var theme = saved || (prefersDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {}
+    })();
+    </script>
+    <meta charset="UTF-8">
     <title>Ram Alagappan - Portfolio</title>
     <link rel="icon" href="Logo.jpeg" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://kit.fontawesome.com/47a39c192a.js" crossorigin="anonymous"></script>
     <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #F5F5F7;
+            --card: #FFFFFF;
+            --text: #1D1D1F;
+            --muted: #86868B;
+            --heading: #1D1D1F;
+            --accent: #0071E3;
+            --accent-hover: #0077ED;
+            --hairline: rgba(0,0,0,0.1);
+            --shadow: rgba(0,0,0,0.04);
+            --shadow-lg: rgba(0,0,0,0.08);
+            --gradient-start: rgba(0,113,227,0.08);
+            --gradient-end: rgba(0,113,227,0);
+            --color-1: #FF6B6B;
+            --color-2: #4ECDC4;
+            --color-3: #45B7D1;
+            --color-4: #FFA07A;
+            --color-5: #98D8C8;
+            --color-6: #F7DC6F;
+            --color-7: #BB8FCE;
+            --color-8: #85C1E2;
+        }
+
+        [data-theme="dark"] {
+            --bg: #000000;
+            --card: #1C1C1E;
+            --text: #F5F5F7;
+            --muted: #98989D;
+            --heading: #F5F5F7;
+            --accent: #0A84FF;
+            --accent-hover: #409CFF;
+            --hairline: rgba(255,255,255,0.1);
+            --shadow: rgba(0,0,0,0.3);
+            --shadow-lg: rgba(0,0,0,0.5);
+            --gradient-start: rgba(10,132,255,0.12);
+            --gradient-end: rgba(10,132,255,0);
+            --color-1: #FF6B6B;
+            --color-2: #4ECDC4;
+            --color-3: #45B7D1;
+            --color-4: #FFA07A;
+            --color-5: #98D8C8;
+            --color-6: #F7DC6F;
+            --color-7: #BB8FCE;
+            --color-8: #85C1E2;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text);
+            background: var(--bg);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
             width: 100%;
-            background-color: #4682B4;
-            overflow: auto;
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            background-color: rgba(251, 251, 253, 0.72);
+            border-bottom: 0.5px solid var(--hairline);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] .navbar {
+            background-color: rgba(28, 28, 30, 0.72);
+        }
+
+        .navbar.scrolled {
+            background-color: rgba(251, 251, 253, 0.85);
+            box-shadow: 0 1px 0 0 var(--hairline);
+        }
+
+        [data-theme="dark"] .navbar.scrolled {
+            background-color: rgba(28, 28, 30, 0.85);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            height: 44px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
         }
 
         .navbar a {
-            float: left;
-            padding: 12px;
-            color: white;
+            padding: 8px 12px;
+            color: var(--text);
             text-decoration: none;
-            font-size: 18px;
-            filter: drop-shadow(5px 5px 5px gray);
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            border-radius: 8px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .navbar a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--color-1), var(--color-2));
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
         }
 
         .navbar a:hover {
-            background-color: #0047AB;
+            color: var(--accent);
+            background-color: rgba(0, 113, 227, 0.08);
         }
 
-        @media screen and (max-width: 500px) {
-            .navbar a {
-                float: none;
-                display: block;
+        .navbar a:hover::after {
+            width: 80%;
+        }
+
+        [data-theme="dark"] .navbar a:hover {
+            background-color: rgba(10, 132, 255, 0.15);
+        }
+
+        .toggle-btn {
+            background: transparent;
+            border: 1px solid var(--hairline);
+            color: var(--text);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .toggle-btn:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            border-color: var(--accent);
+        }
+
+        [data-theme="dark"] .toggle-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .hero {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 100vh;
+            padding: 120px 20px 80px;
+            background: 
+                radial-gradient(1400px 600px at 50% -20%, var(--gradient-start), var(--gradient-end) 70%),
+                linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 25%, rgba(240, 147, 251, 0.1) 50%, rgba(79, 172, 254, 0.1) 75%, rgba(0, 242, 254, 0.1) 100%),
+                var(--bg);
+            background-size: 400% 400%, 400% 400%, 100% 100%;
+            animation: gradientShift 15s ease infinite;
+            overflow: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 107, 107, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(78, 205, 196, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 20%, rgba(69, 183, 209, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 980px;
+            width: 100%;
+            text-align: center;
+            animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        .content {
-           width: 85.3%;
-            background-color: #A7C7E7;
-            color: white;
-            display: block;
-            flex-direction: row;
-            align-items: center;
-            padding: 40px;
-            text-align: justify;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: wrap;
-            line-height:35px;
-            padding-right:100px;
-            padding-left:100px;
-            margin-top: 10px;
-            margin-left:10px;
-            margin-right:10px;
+        .profile-image-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 32px;
+            animation: float 6s ease-in-out infinite;
         }
 
-        .bg {
-            width: 100%;
-            background-image: url('Bg.jpg');
-            background-size: cover;
-            background-position: justify;
-            filter: blur(2px)
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
 
-        .container {
-            width: 30%;
-            background-color: steelblue;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            padding: 12px;
-            padding-left:15px;
-            padding-right:8px;
+        .profile-image {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border: 4px solid var(--card);
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
 
-        .imgme {
-            background-color: #A7C7E7;
-            color: white;
-            display: block;
+        .profile-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
         }
 
-        .bottom-left {
-          position: absolute;
-          bottom: 350px;
-          left: 150px;
+        [data-theme="dark"] .profile-image {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .profile-image-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, var(--color-1), var(--color-2), var(--color-3), var(--color-4), var(--color-1));
+            opacity: 0.3;
+            animation: rotate 8s linear infinite, pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         h1 {
-          font-size: 40px;
+            font-size: 64px;
+            line-height: 1.05;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin: 0 0 16px 0;
+            background: linear-gradient(135deg, var(--color-1) 0%, var(--color-2) 25%, var(--color-3) 50%, var(--color-4) 75%, var(--color-1) 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientText 4s ease infinite;
+            transition: all 0.3s ease;
+            cursor: default;
         }
 
-        .large-text {
-          font-size: 100px;
+        @keyframes gradientText {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
-        .aboutme {
-            width: 85.3%;
-            background-color: #A7C7E7;
-            color: white;
-            display: block;
-            flex-direction: row;
+        h1:hover {
+            transform: scale(1.02);
+            filter: brightness(1.1);
+        }
+
+        .hero-subtitle {
+            font-size: 21px;
+            line-height: 1.381;
+            color: var(--muted);
+            margin: 0 0 8px 0;
+            font-weight: 400;
+        }
+
+        .hero-description {
+            font-size: 17px;
+            line-height: 1.47059;
+            color: var(--muted);
+            margin: 0 0 32px 0;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            padding: 40px;
-            text-align: justify;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: wrap;
-            line-height:35px;
-            padding-right:100px;
-            padding-left:100px;
-            margin-top: 10px;
-            margin-left:10px;
-            margin-right:10px;
+            gap: 8px;
+            margin: 24px 0;
         }
 
-        .drive {
-            width: 85.3%;
-            background-color: #A7C7E7;
-            color: white;
-            display: block;
-            flex-direction: row;
+        .contact-info a {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 17px;
+            transition: color 0.2s ease;
+        }
+
+        .contact-info a:hover {
+            color: var(--accent-hover);
+        }
+
+        .social-links {
+            display: flex;
             align-items: center;
-            padding: 40px;
-            text-align: justify;
+            justify-content: center;
+            gap: 20px;
+            margin: 24px 0;
+        }
+
+        .social-links a {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-1), var(--color-2));
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px var(--shadow);
+            border: 0.5px solid transparent;
+            position: relative;
             overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: wrap;
-            line-height:35px;
-            padding-right:100px;
-            padding-left:100px;
-            margin-top: 10px;
-            filter:10%;
-            margin-left:10px;
-            margin-right:10px;
+        }
+
+        .social-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .social-links a:hover::before {
+            left: 100%;
+        }
+
+        .social-links a:nth-child(1) {
+            background: linear-gradient(135deg, var(--color-3), var(--color-4));
+        }
+
+        .social-links a:nth-child(2) {
+            background: linear-gradient(135deg, var(--color-5), var(--color-6));
+        }
+
+        .social-links a:hover {
+            transform: translateY(-4px) scale(1.1) rotate(5deg);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+            filter: brightness(1.1);
         }
 
         .button {
-          background-color: white;
-          border: none;
-          color: black;
-          text-align: center;
-          text-decoration: none;
-          display: inline-block;
-          font-size: 16px;
-          margin: 4px 2px;
-          cursor: pointer;
-          padding: 15px 25px;
-        }
-
-        .projectresearch {
-            display: flex;
-            width: 200%;
-            background-color: #A7C7E7;
+            background: linear-gradient(135deg, var(--color-1), var(--color-2));
+            border: none;
             color: white;
-            flex-direction: column;
-            padding: 40px;
-            text-align: justify;
-            line-height:35px;
-            padding-right: 200px;
-            padding-left: 100px;
-            margin-top: 10px;
-            margin-right: 5px;
-            margin-left:10px;
-        }
-        
-        .internship {
-            display: flex;
-            width: 87%;
-            background-color: #A7C7E7;
-            color: white;
-            flex-direction: column;
-            padding: 40px;
-            text-align: justify;
-            line-height:35px;
-            padding-right: 100px
-            padding-left: 100px;
-            margin: 10px;
-            margin-bottom: 5px;
-            margin-left:10px;
-        }
-
-        .education {
-            display: flex;
-            width: 100%;
-            background-color: #A7C7E7;
-            color: white;
-            flex-direction: column;
-            padding: 40px;
-            text-align: justify;
-            line-height:35px;
-            padding-right: 50px;
-            padding-left: 50px;
-            margin: 10px;
-            margin-right: 5px;
-            margin-left:10px;
-        }
-        
-        .interests {
-            display: flex;
-            width: 152%;
-            background-color: #A7C7E7;
-            color: white;
-            flex-direction: column;
-            padding: 40px;
-            text-align: justify;
-            line-height:35px;
-            padding-right: 10px
-            padding-left: 10px;
-            margin: 10px;
-            padding-bottom:150px;
-            margin-left:10px;
-        }
-        
-        .button:hover {
-          background-color: #555;
-        }
-        
-        .end {
-            width: 85.3%;
-            background-color: black;
-            color: white;
-            display: block;
-            flex-direction: row;
+            text-align: center;
+            text-decoration: none;
+            display: inline-flex;
             align-items: center;
-            padding: 4px;
-            text-align: justify;
+            gap: 8px;
+            font-size: 17px;
+            font-weight: 500;
+            padding: 12px 24px;
+            border-radius: 22px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 14px rgba(255, 107, 107, 0.3);
+            margin: 8px;
+            position: relative;
             overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: wrap;
-            line-height:5px;
-            padding-right:100px;
-            padding-left:100px;
-            margin-top: 6px;
-            margin-left:10px;
-            margin-right:10px;
+        }
+
+        .button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 28px rgba(255, 107, 107, 0.4);
+            background: linear-gradient(135deg, var(--color-2), var(--color-3));
+        }
+
+        .button:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .section {
+            width: 100%;
+            padding: 100px 20px;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .section-inner {
+            width: 100%;
+            max-width: 980px;
+            background: var(--card);
+            border-radius: 30px;
+            padding: 64px;
+            box-shadow: 0 4px 20px var(--shadow);
+            border: 0.5px solid var(--hairline);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .section-inner:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .section-inner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-1), var(--color-2), var(--color-3), var(--color-4));
+            background-size: 300% 100%;
+            animation: gradientMove 3s ease infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .section-inner:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes gradientMove {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .section h2 {
+            font-size: 48px;
+            line-height: 1.08349;
+            font-weight: 700;
+            letter-spacing: -0.003em;
+            margin: 0 0 24px 0;
+            background: linear-gradient(135deg, var(--color-1) 0%, var(--color-2) 25%, var(--color-3) 50%, var(--color-4) 75%, var(--color-1) 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientText 5s ease infinite;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .section h2:hover {
+            transform: scale(1.02);
+        }
+
+        .section p {
+            font-size: 19px;
+            line-height: 1.47059;
+            color: var(--text);
+            margin: 0 0 16px 0;
+        }
+
+        .section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .section li {
+            font-size: 19px;
+            line-height: 1.47059;
+            color: var(--text);
+            margin: 0 0 16px 0;
+            padding-left: 24px;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .section li:hover {
+            transform: translateX(8px);
+            color: var(--accent);
+        }
+
+        .section li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--color-1);
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .section li:nth-child(2n)::before {
+            color: var(--color-2);
+        }
+
+        .section li:nth-child(3n)::before {
+            color: var(--color-3);
+        }
+
+        .section li:nth-child(4n)::before {
+            color: var(--color-4);
+        }
+
+        .section li:hover::before {
+            transform: translateX(4px);
+            color: var(--accent);
+        }
+
+        .section a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .section a:hover {
+            color: var(--accent-hover);
+            text-decoration: underline;
+        }
+
+        .project-card {
+            position: relative;
+            overflow: hidden;
+            background: var(--card);
+            border: 0.5px solid var(--hairline);
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            height: 100%;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-1), var(--color-2), var(--color-3), var(--color-4));
+            background-size: 300% 100%;
+            animation: gradientMove 3s ease infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+            border-color: var(--accent);
+        }
+
+        .project-card:hover p:last-child {
+            transform: translateX(4px);
+        }
+
+        .project-card p:last-child {
+            transition: transform 0.3s ease;
+        }
+
+        .project-card h3 {
+            font-size: 24px;
+            margin: 0 0 12px 0;
+            color: var(--heading);
+            background: linear-gradient(135deg, var(--color-1), var(--color-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .project-card:nth-child(2) h3 {
+            background: linear-gradient(135deg, var(--color-3), var(--color-4));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .project-card:nth-child(3) h3 {
+            background: linear-gradient(135deg, var(--color-5), var(--color-6));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .project-card:nth-child(4) h3 {
+            background: linear-gradient(135deg, var(--color-7), var(--color-8));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 32px;
+        }
+
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(60px) scale(0.95);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: opacity, transform;
+        }
+
+        .scroll-reveal.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .scroll-reveal.delay-1 { transition-delay: 0.1s; }
+        .scroll-reveal.delay-2 { transition-delay: 0.2s; }
+        .scroll-reveal.delay-3 { transition-delay: 0.3s; }
+
+        .footer {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            background-color: transparent;
+            padding: 60px 20px 40px;
+        }
+
+        .footer-content {
+            width: 100%;
+            max-width: 980px;
+            padding: 24px 0;
+            border-top: 0.5px solid var(--hairline);
+            color: var(--muted);
+            text-align: center;
+            font-size: 14px;
+        }
+
+        @media screen and (max-width: 960px) {
+            h1 { font-size: 48px; }
+            .section h2 { font-size: 40px; }
+            .section-inner { padding: 40px 32px; border-radius: 24px; }
+            .hero { min-height: 90vh; padding: 100px 20px 60px; }
+            .projects-grid { grid-template-columns: 1fr; }
+        }
+
+        @media screen and (max-width: 640px) {
+            h1 { font-size: 40px; }
+            .section h2 { font-size: 32px; }
+            .section-inner { padding: 32px 24px; border-radius: 20px; }
+            .hero-subtitle { font-size: 19px; }
+            .hero-description { font-size: 16px; }
+            .profile-image { width: 140px; height: 140px; }
+            .section { padding: 60px 20px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            .scroll-reveal {
+                opacity: 1;
+                transform: none;
+            }
         }
     </style>
 </head>
 <body>
 <div class="navbar" id="top">
-<a href="#about"><i class="fa fa-address-card"></i> About</a>
-<a href="#education"><i class="fa fa-graduation-cap"></i> Education</a>
-<a href="#pro"><i class="fa fa-laptop-code"></i> Projects</a>
-<a href="#si"><i class="fa fa-laptop-code"></i> Internships</a>
-<a href="#con"><i class="fa fa-message"></i> Contact</a>
-<a href="#int"><i class="fa fa-paper-plane"></i> Interests</a>
+    <div class="nav-container">
+        <div class="nav-links">
+            <a href="#about"><i class="fa fa-address-card"></i> About</a>
+            <a href="#education"><i class="fa fa-graduation-cap"></i> Education</a>
+            <a href="projects.html"><i class="fa fa-laptop-code"></i> Projects</a>
+            <a href="#si"><i class="fa fa-briefcase"></i> Internships</a>
+            <a href="contact.html"><i class="fa fa-message"></i> Contact</a>
+            <a href="#int"><i class="fa fa-paper-plane"></i> Interests</a>
+        </div>
+        <a class="toggle" href="#" id="themeToggle" aria-label="Toggle theme">
+            <button class="toggle-btn"><i class="fa fa-moon"></i></button>
+        </a>
+    </div>
 </div>
 
-<div class="content" style="margin-right:60%">
+<div class="hero">
+    <div class="hero-content">
+        <div class="profile-image-wrapper">
+            <img class="profile-image" src="Me.jpeg" alt="Ram Alagappan">
+        </div>
+        <h1>Ram Alagappan</h1>
+        <p class="hero-subtitle">Master's Student</p>
+        <p class="hero-description">Pursuing Computer Engineering<br>Arizona State University, Tempe</p>
+        <div class="contact-info">
+            <a href="mailto:ramalagappan2002@gmail.com">ramalagappan2002@gmail.com</a>
+            <span style="color: var(--muted);">+1 (602) - 804 - 1388</span>
+        </div>
+        <div class="social-links">
+            <a href="https://www.linkedin.com/in/ram-a-?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" aria-label="LinkedIn"><i class="fa fa-linkedin"></i></a>
+            <a href="https://github.com/Ram-8" aria-label="GitHub"><i class="fa fa-brands fa-github"></i></a>
+        </div>
+        <a href="Resume.pdf" download="Resume.pdf">
+            <button class="button"><i class="fa fa-download"></i> Download Resume</button>
+        </a>
+    </div>
+</div>
 
+<div class="section" id="about">
+    <div class="section-inner scroll-reveal">
+        <h2>About Me</h2>
+        <p>Hi, I'm Ram Alagappan, a passionate and driven computer engineer currently pursuing my Master's in Computer Engineering at Arizona State University. I have always been fascinated by the power of technology to solve complex problems and improve lives, which led me to pursue a career in this field. I did Computer Science & Engineering with a specialization in AI & ML in my undergraduate program at SRM Institute of Science and Technology-Ramapuram, Chennai. This period laid the groundwork for my understanding of programming, algorithms, and machine learning, while exposing me to hands-on projects that further enhanced my learning. Throughout my academics, I was able to enhance my knowledge through both coursework and internships, where I worked on practical applications of data science, machine learning, and robotics. My undergraduate and graduate experiences have shaped my technical expertise, as well as my interest in solving real-world problems.</p>
+    </div>
+</div>
 
-<div class="container" style="margin-left:50%">
-    <img class="imgme" src="Me.jpeg" alt="Me">
-        <h1><font style="font-family:courier;">Ram Alagappan</h1>
-        <p><center>Master's Student<br>
-        Pursuing Computer Engineering<br>
-        Arizona State University, Tempe.</font></p><br>
-        <a href="mailto:ramalagappan2002@gmail.com">Ramalagappan2002@gmail.com</a>
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;+1 (602) - 804 - 1388</p>
-        <ul>
-            <li style="display:inline-block;">
-                <a href="https://www.linkedin.com/in/ram-a-?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"><i class="fa fa-linkedin"></i></a></li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <li style="display:inline-block;">
-                <a href="https://github.com/Ram-8"><i class="fa fa-brands fa-github"></i></a></li><br><br>
-            <a href="Resume.pdf" download="Resume.pdf">
-              <button class="button"><i class="fa fa-download"></i>&nbsp;&nbsp;Download Resume</button>
+<div class="section">
+    <div class="section-inner scroll-reveal delay-1">
+        <h2>What Drives Me</h2>
+        <p>I enjoy tackling real-world challenges through technology and building innovative solutions that leave a lasting impact. I believe that every problem is an opportunity to innovate & grow and my motivation comes from developing solutions that can have a meaningful impact. I am ready to learn and enhance my knowledge on the topics that i might lack behind, i certainly believe that constant learning is necessary in any field. Whether it's improving systems through machine learning, automating processes, or creating new software solutions, I enjoy working on projects that challenge my abilities and push the boundaries of what's possible. My goal is to become a renowned computer engineer, contributing to cutting-edge developments in the tech industry.</p>
+    </div>
+</div>
+
+<div class="section" id="pro">
+    <div class="section-inner scroll-reveal delay-2">
+        <h2>Projects</h2>
+        <div class="projects-grid">
+            <a href="supplementrx-ai.html" class="project-card">
+                <h3>SupplementsRx AI</h3>
+                <p style="color: var(--muted); font-size: 14px; margin: 0 0 16px 0;"><i class="fa fa-calendar"></i> September 2024</p>
+                <p style="font-size: 17px; line-height: 1.5; color: var(--text); margin: 0;">An AI-powered supplement safety and information system using Knowledge Graph (Neo4j) and Vector Database (FAISS).</p>
+                <p style="margin-top: 16px; color: var(--accent); font-size: 15px;">Learn more <i class="fa fa-arrow-right"></i></p>
             </a>
-</div>
-</div>
-
-<div class="aboutme" id="about">
-    <h2><font color="purple">About Me</font></h2><p><font color="black">Hi, I'm Ram Alagappan, a passionate and driven computer engineer currently pursuing my Master's in Computer Engineering at Arizona State University. I have always been fascinated by the power of technology to solve complex problems and improve lives, which led me to pursue a career in this field. I did Computer Science & Engineering with a specialization in AI & ML in my undergraduate program at SRM Institute of Science and Technology-Ramapuram, Chennai. This period laid the groundwork for my understanding of programming, algorithms, and machine learning, while exposing me to hands-on projects that further enhanced my learning. Throughout my academics, I was able to enhance my knowledge through both coursework and internships, where I worked on practical applications of data science, machine learning, and robotics. My undergraduate and graduate experiences have shaped my technical expertise, as well as my interest in solving real-world problems.</font></p>
-</div>
-
-<div class="drive">
-    <h2><font color="purple">What Drives Me</font></h2><p><font color="black">I enjoy tackling real-world challenges through technology and building innovative solutions that leave a lasting impact. I believe that every problem is an opportunity to innovate & grow and my motivation comes from developing solutions that can have a meaningful impact. I am ready to learn and enhance my knowledge on the topics that i might lack behind, i certainly believe that constant learning is necessary in any field.  Whether it’s improving systems through machine learning, automating processes, or creating new software solutions, I enjoy working on projects that challenge my abilities and push the boundaries of what’s possible. My goal is to become a renowned computer engineer, contributing to cutting-edge developments in the tech industry.</font></p></div>
-
-<div style="display: flex; justify-content: space-between; width: 100%;">
-    <div class="projectresearch" id="pro">
-        <h2><font color="purple">Projects</font></h2><p><font color="black"><b><ul>
-            <li>Smart Selection for Optimal D2D Communication Backup Device and Anomaly Detection October 2023
-            This study proposes a framework for smartly selecting backup D2D communication UE’s based on criteria like signal strength,
-            battery life, proximity, and historical reliability using machine learning models, When the primarily connected UE RELAY is
-            not in range.</li><br>
-            <li>Food ordering app exclusively for universities May 2022
-            This app aims to streamline the process of ordering food on campus by reducing wait times, especially useful in highly populated
-            Universities to cater to the fast-paced lifestyle.</li></ul>
-            <h2><font color="purple">Research Papers</font></h2><p><font color="black"><b>
-            <ul><li> Ram. A,Gowthamy. J,Senthilselvi. A, Rohit. R.,Niranjan.S. Emergency Alert and Adaptive Traffic Signal System Using
-            Machine Learning.In:Senjyu,T.,So–In,C.,Joshi, A. (eds) Smart Trends in Computing and Communications. SmartCom 2024.
-            Lecture Notes in Networks and Systems, vol 948. Springer, Singapore, 15 May 2024.<p><a herf="https://doi.org/10.1007/978-981-97-1329-
-            5_7">https://doi.org/10.1007/978-981-97-1329-
-                5_7</a></p></li><br>
-            <li>Knowledge Driven Semantic Segmentation based on Instance Adaptive Learning (Accepted in IEEE Explore) June 2024</li></ul>
-    </div>
-
-    <div class="internship" id="si">
-        <h2><font color="purple">Internship</font></h2><p><font color="black"><ul><li>July 2023<br>Cognizant: During my internship at Cognizant, I gained hands-on experience in data analysis, modeling, and model building, specifically focusing on machine learning techniques used in real-world production environments. My primary responsibilities included working with large datasets, cleaning and preprocessing data, and creating predictive models to extract actionable insights. </li> <br><li>April 2023<br>Prag robotics: At Prag Robotics, I worked on a project titled “Coin Station,” which involved applying big data analytics and machine learning techniques to predict future trends of the markets. My tasks included collecting and processing data from various sources, cleaning and organizing it, and performing exploratory data analysis. Using R programming, We built machine learning models to predict trends and automate decisions, which helped identify the future trends of markets such as crypto,gold and house price. This experience enhanced my ability to work with complex datasets and use machine learning algorithms for real-time data-driven solutions. </li>  <br><li>March 2023<br>Oasis Infobyte: During my internship at Oasis Infobyte, I focused on developing data science solutions by utilizing Python and R for data analysis and visualization. I assisted in building machine learning models for predictive analytics and evaluated different algorithms to improve model accuracy. This internship allowed me to enhance my skills in data cleaning, statistical analysis, and model evaluation, and helped me understand the practical application of data science in real-world business scenarios.
- </li> <br><li>August 2023<br>Code Clause: At Code Clause, I worked as a Data Science Intern, I focused on feature engineering, building machine learning models, and evaluating their performance. My tasks also included creating data pipelines to automate processes and improve data handling efficiency. Through this internship, I gained valuable exposure to the practical aspects of machine learning and its application in real-time business problems, further enhancing my technical expertise in the field.</li></ul></font></p>
+            <a href="misere-tic-tac-toe.html" class="project-card">
+                <h3>Misere Tic-Tac-Toe</h3>
+                <p style="color: var(--muted); font-size: 14px; margin: 0 0 16px 0;"><i class="fa fa-calendar"></i> May 2024</p>
+                <p style="font-size: 17px; line-height: 1.5; color: var(--text); margin: 0;">An Android game built with Jetpack Compose and Material Design 3, where the objective is inverted.</p>
+                <p style="margin-top: 16px; color: var(--accent); font-size: 15px;">Learn more <i class="fa fa-arrow-right"></i></p>
+            </a>
+            <a href="market-basket-analysis.html" class="project-card">
+                <h3>Market Basket Analysis</h3>
+                <p style="color: var(--muted); font-size: 14px; margin: 0 0 16px 0;"><i class="fa fa-calendar"></i> Project</p>
+                <p style="font-size: 17px; line-height: 1.5; color: var(--text); margin: 0;">Market basket analysis using Apriori Algorithm to identify relationships between frequently purchased products.</p>
+                <p style="margin-top: 16px; color: var(--accent); font-size: 15px;">Learn more <i class="fa fa-arrow-right"></i></p>
+            </a>
+            <a href="churn-prediction.html" class="project-card">
+                <h3>Churn Prediction</h3>
+                <p style="color: var(--muted); font-size: 14px; margin: 0 0 16px 0;"><i class="fa fa-calendar"></i> Project</p>
+                <p style="font-size: 17px; line-height: 1.5; color: var(--text); margin: 0;">Reduced customer churn rate by up to 50% using logistic regression model in the telecom industry.</p>
+                <p style="margin-top: 16px; color: var(--accent); font-size: 15px;">Learn more <i class="fa fa-arrow-right"></i></p>
+            </a>
+        </div>
     </div>
 </div>
 
-<div style="display: flex; justify-content: space-between; width: 80%;">
-    <div class="education" id="education">
-        <h2><font color="purple">Education</font></h2><p><font color="black"><b>Present <i class="fa fa-book-open"></i></b><br>Arizona State University, Tempe<br>Master of Science, Computer Engineering (Computer Systems)
-            <br><br>
-            August 2020 – May 2024 <i class="fa fa-graduation-cap"></i><br>
-            SRM Institute of Science and Technology, Ramapuram<br>
-            Bachelor of Technology in Computer Science with AI/ML SRM Institute of Science and Technology, Ramapuram
-           <br> CGPA : 9.01 / 10
-            
-    </div>
-
-    <div class="interests" id="int">
-        <h2><font color="purple">Interests</font></h2><p><font color="black">When I’m not doing coding or research, I usually:<br>
-            <ul>
-                <li><i class="fa fa-map-o"></i> Hike scenic trails</li>
-                <li><i class="fa fa-bicycle"></i>&nbspCycle</li>
-                <li><i class="fa fa-superpowers"></i> Exercising in the gym</li>
-                <li><i class="fa fa-cutlery"></i> Cook</li>
-                <li><i class="fa fa-user"></i> Member of a technical club called Techwiz from 2022 to 2024</li>
-                <li><i class="fa fa-microphone"></i> Hosted ship-wreck in a cultural event named Texus in October 2022</li>
-                <li><i class="fa fa-code"></i> Secured third position in a hackathon called Abinito</li></ul>
-    </div>
-</div>
-
-<div class="drive" id="con">
-    <h2><font color="purple"><center>Reach out to me <i class="fa fa-phone"></i></font></h2><p><font color="black"><center>I'm looking foward to connect with you and to hear your thoughts.<br> Please don't hesitate to reach me out, as your input would be really useful to improve myself.</center></font></p>
-    <center> <a href="mailto:ramalagappan2002@gmail.com">Ramalagappan2002@gmail.com</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a> <font color="black">+1 (602) - 804 - 1388</a>
+<div class="section">
+    <div class="section-inner scroll-reveal delay-1">
+        <h2>Publications</h2>
         <ul>
-            <li style="display:inline-block;">
-                <a href="https://www.linkedin.com/in/ram-a-?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"><i class="fa fa-linkedin"></i></a></li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <li style="display:inline-block;">
-                <a href="https://github.com/Ram-8"><i class="fa fa-brands fa-github"></i></a></li><br><br>
+            <li><b>Emergency Alert and Adaptive Traffic Signal System Using Machine Learning</b><br>
+            Ram A, Gowthamy J, SenthilSelvi A, Rohit R, Niranjan S<br>
+            <a href="https://doi.org/10.1007/978-981-97-1329-5_7">10.1007/978-981-97-1329-5_7</a></li>
+            <li><b>Knowledge Driven Semantic Segmentation on Instance Adaptive Learning</b><br>
+            Ram A, Rohit R, Siddarth Lakshmanan<br>
+            <a href="https://doi.org/10.1109/I3CEET61722.2024.10993938">10.1109/I3CEET61722.2024.10993938</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-inner scroll-reveal delay-1" id="si">
+        <h2>Internships</h2>
+        <ul>
+            <li><b>Data Science Intern, Code Clause - August 2023</b><br>
+            Executed feature engineering to transform raw data into useful information and developed machine learning models such as decision trees & random forests, while optimizing predictive accuracy of model by 80%. Implemented automated data pipelines to enhance processing efficiency by a quarter and to ensure scalable data handling.</li>
+            <li><b>Machine Learning Engineer, Cognizant - July 2023</b><br>
+            Gained hands-on experience in data analysis, modeling, and model building by deploying 4 main techniques such as regression analysis, Monte Carlo simulation, entity-relationship modeling, and data mining respectively. Processed large datasets by collecting and cleaning. Created predictive models, evaluated models's performance and forecasted its future with at least 20% better accuracy for being one step ahead in decision making.</li>
+            <li><b>Data Scientist, Oasis Infobyte - March 2023</b><br>
+            Conducted data analysis and visualization, building machine learning models for predictive analytics deploying Python and R and evaluated algorithms to improve accuracy of model. Enhanced skills in data cleaning, statistical analysis, and model evaluation by having a hands-on experience on these topics by performing on 3 datasets from kaggle.</li>
+        </ul>
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-inner scroll-reveal delay-2" id="education">
+        <h2>Education</h2>
+        <p>
+        <b>Arizona State University | Tempe, Arizona</b><br>
+        MS in Computer Engineering (Computer Systems)<br>
+        <span style="color: var(--muted);">Aug 2024 - May 2026</span>
+        <br><br>
+        <b>SRM Institute of Science and Technology | Chennai, India</b><br>
+        Bachelor of Technology in Computer Science and Engineering with AI and ML<br>
+        <span style="color: var(--muted);">Aug 2020 - May 2024</span>
+        </p>
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-inner scroll-reveal delay-1">
+        <h2>Skills</h2>
+        <p>
+        <b>Languages & Libraries:</b> Python, Java (familiar), C, HTML, CSS, Numpy, Pandas, Matplotlib, Scikit-learn, TensorFlow, PyTorch, PostgreSQL, semantic search concepts, text embeddings<br><br>
+        <b>Tools & Platforms:</b> Docker, Kubernetes, Machine Learning, PyCharm, XCode, Visual Studio Code, Git, Hugging Face
+        </p>
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-inner scroll-reveal delay-2" id="int">
+        <h2>Interests</h2>
+        <p>When I'm not doing coding or research, I usually:<br></p>
+        <ul>
+            <li><i class="fa fa-map-o"></i> Hike scenic trails</li>
+            <li><i class="fa fa-bicycle"></i> Cycle</li>
+            <li><i class="fa fa-superpowers"></i> Exercising in the gym</li>
+            <li><i class="fa fa-cutlery"></i> Cook</li>
+            <li><i class="fa fa-user"></i> Member of a technical club called Techwiz from 2022 to 2024</li>
+            <li><i class="fa fa-microphone"></i> Hosted ship-wreck in a cultural event named Texus in October 2022</li>
+            <li><i class="fa fa-code"></i> Secured third position in a hackathon called Abinito</li>
+        </ul>
+    </div>
+</div>
+
+<div class="section" id="con">
+    <div class="section-inner scroll-reveal delay-3">
+        <h2><center>Reach out to me <i class="fa fa-phone"></i></center></h2>
+        <p><center>I'm looking forward to connect with you and to hear your thoughts.<br>Please don't hesitate to reach me out, as your input would be really useful to improve myself.</center></p>
+        <div style="text-align: center; margin-top: 32px;">
+            <a href="mailto:ramalagappan2002@gmail.com">ramalagappan2002@gmail.com</a>
+            <span style="color: var(--muted); margin: 0 16px;">•</span>
+            <span style="color: var(--text);">+1 (602) - 804 - 1388</span>
+            <div class="social-links" style="margin: 24px 0;">
+                <a href="https://www.linkedin.com/in/ram-a-?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" aria-label="LinkedIn"><i class="fa fa-linkedin"></i></a>
+                <a href="https://github.com/Ram-8" aria-label="GitHub"><i class="fa fa-brands fa-github"></i></a>
+            </div>
             <a href="Resume.pdf" download="Resume.pdf">
-                <button class="button"><i class="fa fa-download"></i>&nbsp;&nbsp;Download Resume</button>
-                <br><button><a href="#top"><i class="fa fa-arrow-up"></i> Top</a></button>
-            </center></a></div>
-<div class="end"><footer>
-    <p style="font-family:courier;"><font color='white'><i class="fa fa-copyright"></i> 2024 by Ram Alagappan</font></p>
-</footer></div>
+                <button class="button"><i class="fa fa-download"></i> Download Resume</button>
+            </a>
+            <br><br>
+            <a href="#top">
+                <button class="button" style="background: linear-gradient(135deg, var(--color-7), var(--color-8));"><i class="fa fa-arrow-up"></i> Back to Top</button>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <div class="footer-content">
+        <p style="font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;">
+            <i class="fa fa-copyright"></i> 2024 by Ram Alagappan
+        </p>
+    </div>
+</div>
+
+<script>
+(function() {
+    function setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        try { localStorage.setItem('theme', theme); } catch (e) {}
+        var icon = document.querySelector('#themeToggle i');
+        if (icon) {
+            icon.className = theme === 'dark' ? 'fa fa-sun' : 'fa fa-moon';
+        }
+    }
+
+    var current = document.documentElement.getAttribute('data-theme') || 'light';
+    setTheme(current);
+
+    var toggle = document.getElementById('themeToggle');
+    if (toggle) {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            var now = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            setTheme(now);
+        });
+    }
+
+    var navbar = document.querySelector('.navbar');
+    window.addEventListener('scroll', function() {
+        if (window.pageYOffset > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    var observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+    };
+
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.scroll-reveal').forEach(function(el) {
+        observer.observe(el);
+    });
+
+    if (typeof jQuery !== 'undefined') {
+        jQuery.easing.easeInOutCubic = function(x, t, b, c, d) {
+            if ((t /= d / 2) < 1) return c / 2 * t * t * t + b;
+            return c / 2 * ((t -= 2) * t * t + 2) + b;
+        };
+    }
+
+    var buttons = document.querySelectorAll('.button, .social-links a');
+    buttons.forEach(function(button) {
+        button.addEventListener('mousemove', function(e) {
+            var rect = button.getBoundingClientRect();
+            var x = e.clientX - rect.left - rect.width / 2;
+            var y = e.clientY - rect.top - rect.height / 2;
+            button.style.transform = 'translate(' + x * 0.15 + 'px, ' + y * 0.15 + 'px)';
+        });
+        button.addEventListener('mouseleave', function() {
+            button.style.transform = '';
+        });
+    });
+})();
+</script>
 </body>
 </html>

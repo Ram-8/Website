@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+    (function() {
+        try {
+            var saved = localStorage.getItem('theme');
+            var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            var theme = saved || (prefersDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {}
+    })();
+    </script>
+    <meta charset="UTF-8">
+    <title>Market Basket Analysis • Ram Alagappan</title>
+    <link rel="icon" href="Logo.jpeg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://kit.fontawesome.com/47a39c192a.js" crossorigin="anonymous"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #F5F5F7; --card: #FFFFFF; --text: #1D1D1F; --muted: #86868B;
+            --heading: #1D1D1F; --accent: #0071E3; --accent-hover: #0077ED;
+            --hairline: rgba(0,0,0,0.1); --shadow: rgba(0,0,0,0.04);
+            --color-1: #FF6B6B; --color-2: #4ECDC4; --color-3: #45B7D1; --color-4: #FFA07A;
+            --color-5: #98D8C8; --color-6: #F7DC6F; --color-7: #BB8FCE; --color-8: #85C1E2;
+        }
+        [data-theme="dark"] {
+            --bg: #000000; --card: #1C1C1E; --text: #F5F5F7; --muted: #98989D;
+            --heading: #F5F5F7; --accent: #0A84FF; --accent-hover: #409CFF;
+            --hairline: rgba(255,255,255,0.1); --shadow: rgba(0,0,0,0.3);
+            --color-1: #FF6B6B; --color-2: #4ECDC4; --color-3: #45B7D1; --color-4: #FFA07A;
+            --color-5: #98D8C8; --color-6: #F7DC6F; --color-7: #BB8FCE; --color-8: #85C1E2;
+        }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0; padding: 0; color: var(--text); background: var(--bg);
+            overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+        }
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000; width: 100%;
+            backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
+            background-color: rgba(251, 251, 253, 0.72); border-bottom: 0.5px solid var(--hairline);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        [data-theme="dark"] .navbar { background-color: rgba(28, 28, 30, 0.72); }
+        .navbar.scrolled { background-color: rgba(251, 251, 253, 0.85); box-shadow: 0 1px 0 0 var(--hairline); }
+        [data-theme="dark"] .navbar.scrolled { background-color: rgba(28, 28, 30, 0.85); }
+        .nav-container {
+            max-width: 1200px; margin: 0 auto; display: flex; align-items: center;
+            justify-content: space-between; padding: 0 24px; height: 44px;
+        }
+        .nav-links { display: flex; align-items: center; gap: 8px; flex: 1; }
+        .navbar a {
+            padding: 8px 12px; color: var(--text); text-decoration: none; font-size: 14px;
+            font-weight: 400; letter-spacing: -0.01em; border-radius: 8px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); position: relative;
+        }
+        .navbar a::after {
+            content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px;
+            background: linear-gradient(90deg, var(--color-1), var(--color-2));
+            transition: all 0.3s ease; transform: translateX(-50%);
+        }
+        .navbar a:hover { color: var(--accent); background-color: rgba(0, 113, 227, 0.08); }
+        .navbar a:hover::after { width: 80%; }
+        [data-theme="dark"] .navbar a:hover { background-color: rgba(10, 132, 255, 0.15); }
+        .toggle-btn {
+            background: transparent; border: 1px solid var(--hairline); color: var(--text);
+            padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 14px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .toggle-btn:hover { background-color: rgba(0, 0, 0, 0.05); border-color: var(--accent); }
+        [data-theme="dark"] .toggle-btn:hover { background-color: rgba(255, 255, 255, 0.1); }
+        .section {
+            width: 100%; padding: 100px 20px; display: flex; justify-content: center; position: relative;
+        }
+        .section-inner {
+            width: 100%; max-width: 980px; background: var(--card); border-radius: 30px;
+            padding: 64px; box-shadow: 0 4px 20px var(--shadow); border: 0.5px solid var(--hairline);
+            position: relative; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .section-inner::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, var(--color-5), var(--color-6));
+            background-size: 300% 100%; animation: gradientMove 3s ease infinite; opacity: 1;
+        }
+        @keyframes gradientMove { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        .section h1 {
+            font-size: 56px; line-height: 1.08349; font-weight: 700; letter-spacing: -0.003em;
+            margin: 0 0 16px 0; background: linear-gradient(135deg, var(--color-5) 0%, var(--color-6) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .project-date {
+            font-size: 18px; color: var(--muted); font-weight: 500; margin-bottom: 32px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .section h2 {
+            font-size: 32px; line-height: 1.08349; font-weight: 700; letter-spacing: -0.003em;
+            margin: 48px 0 24px 0; color: var(--heading);
+        }
+        .section p {
+            font-size: 19px; line-height: 1.47059; color: var(--text); margin: 0 0 24px 0;
+        }
+        .section ul { list-style: none; padding: 0; }
+        .section li {
+            font-size: 19px; line-height: 1.47059; color: var(--text); margin: 0 0 16px 0;
+            padding-left: 24px; position: relative;
+        }
+        .section li::before {
+            content: '▸'; position: absolute; left: 0; color: var(--color-5); font-weight: bold;
+        }
+        .back-button {
+            display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px;
+            background: linear-gradient(135deg, var(--color-7), var(--color-8)); color: white;
+            text-decoration: none; border-radius: 22px; font-size: 17px; font-weight: 500;
+            transition: all 0.3s ease; box-shadow: 0 4px 14px rgba(187, 143, 206, 0.3);
+            margin-bottom: 32px;
+        }
+        .back-button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(187, 143, 206, 0.4); }
+        @media screen and (max-width: 960px) {
+            .section h1 { font-size: 40px; } .section h2 { font-size: 28px; }
+            .section-inner { padding: 40px 32px; border-radius: 24px; }
+        }
+        @media screen and (max-width: 640px) {
+            .section h1 { font-size: 32px; } .section h2 { font-size: 24px; }
+            .section-inner { padding: 32px 24px; border-radius: 20px; } .section { padding: 60px 20px; }
+        }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <div class="nav-container">
+        <div class="nav-links">
+            <a href="index.html"><i class="fa fa-home"></i> Home</a>
+            <a href="index.html#about"><i class="fa fa-address-card"></i> About</a>
+            <a href="index.html#education"><i class="fa fa-graduation-cap"></i> Education</a>
+            <a href="projects.html"><i class="fa fa-laptop-code"></i> Projects</a>
+            <a href="index.html#si"><i class="fa fa-briefcase"></i> Internships</a>
+            <a href="contact.html"><i class="fa fa-message"></i> Contact</a>
+        </div>
+        <a class="toggle" href="#" id="themeToggle" aria-label="Toggle theme">
+            <button class="toggle-btn"><i class="fa fa-moon"></i></button>
+        </a>
+    </div>
+</div>
+<div class="section" style="padding-top: 120px;">
+    <div class="section-inner">
+        <a href="projects.html" class="back-button"><i class="fa fa-arrow-left"></i> Back to Projects</a>
+        <h1>Market Basket Analysis</h1>
+        <div class="project-date"><i class="fa fa-calendar"></i> Project</div>
+        <h2>Overview</h2>
+        <p>Market Basket Analysis is a data mining project that identifies relationships between products frequently purchased together by examining patterns and frequency in customer purchase data. This analysis helps businesses understand product associations and predict which products customers are likely to buy together.</p>
+        <h2>Key Features</h2>
+        <ul>
+            <li>Analysis of approximately 500 customer transactions</li>
+            <li>Identification of product associations and patterns</li>
+            <li>Prediction of products likely to be purchased together</li>
+            <li>Understanding of product grouping and customer behavior</li>
+            <li>Implementation using Apriori Algorithm</li>
+        </ul>
+        <h2>Technology Stack</h2>
+        <ul>
+            <li><b>Language:</b> Python</li>
+            <li><b>Algorithm:</b> Apriori Algorithm for association rule mining</li>
+            <li><b>Data Analysis:</b> Pattern recognition and frequency analysis</li>
+            <li><b>Libraries:</b> Python data science libraries for data processing</li>
+        </ul>
+        <h2>Methodology</h2>
+        <p>The project uses the Apriori Algorithm, which is a classic algorithm for mining frequent itemsets and learning association rules. The algorithm works by identifying frequent individual items in the database and extending them to larger itemsets as long as those itemsets appear sufficiently often in the database.</p>
+        <h2>Data Analysis Process</h2>
+        <ul>
+            <li>Collected and processed customer purchase history data</li>
+            <li>Identified frequent itemsets and product combinations</li>
+            <li>Generated association rules with confidence and support metrics</li>
+            <li>Analyzed patterns to understand product relationships</li>
+            <li>Predicted likely product groupings for business insights</li>
+        </ul>
+        <h2>Business Impact</h2>
+        <p>This analysis provides valuable insights for retailers and e-commerce businesses, helping them with product placement, cross-selling strategies, inventory management, and marketing campaigns. By understanding which products are frequently bought together, businesses can optimize their product recommendations and improve sales.</p>
+    </div>
+</div>
+<script>
+(function() {
+    function setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        try { localStorage.setItem('theme', theme); } catch (e) {}
+        var icon = document.querySelector('#themeToggle i');
+        if (icon) { icon.className = theme === 'dark' ? 'fa fa-sun' : 'fa fa-moon'; }
+    }
+    var current = document.documentElement.getAttribute('data-theme') || 'light';
+    setTheme(current);
+    var toggle = document.getElementById('themeToggle');
+    if (toggle) {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            var now = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            setTheme(now);
+        });
+    }
+    var navbar = document.querySelector('.navbar');
+    window.addEventListener('scroll', function() {
+        if (window.pageYOffset > 50) { navbar.classList.add('scrolled'); }
+        else { navbar.classList.remove('scrolled'); }
+    });
+})();
+</script>
+</body>
+</html>
+

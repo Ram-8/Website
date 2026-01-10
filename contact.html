@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+    (function() {
+        try {
+            var saved = localStorage.getItem('theme');
+            var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            var theme = saved || (prefersDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {}
+    })();
+    </script>
+    <meta charset="UTF-8">
+    <title>Contact • Ram Alagappan</title>
+    <link rel="icon" href="Logo.jpeg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://kit.fontawesome.com/47a39c192a.js" crossorigin="anonymous"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #F5F5F7; --card: #FFFFFF; --text: #1D1D1F; --muted: #86868B;
+            --heading: #1D1D1F; --accent: #0071E3; --accent-hover: #0077ED;
+            --hairline: rgba(0,0,0,0.1); --shadow: rgba(0,0,0,0.04);
+            --color-1: #FF6B6B; --color-2: #4ECDC4; --color-3: #45B7D1; --color-4: #FFA07A;
+            --color-5: #98D8C8; --color-6: #F7DC6F; --color-7: #BB8FCE; --color-8: #85C1E2;
+        }
+        [data-theme="dark"] {
+            --bg: #000000; --card: #1C1C1E; --text: #F5F5F7; --muted: #98989D;
+            --heading: #F5F5F7; --accent: #0A84FF; --accent-hover: #409CFF;
+            --hairline: rgba(255,255,255,0.1); --shadow: rgba(0,0,0,0.3);
+            --color-1: #FF6B6B; --color-2: #4ECDC4; --color-3: #45B7D1; --color-4: #FFA07A;
+            --color-5: #98D8C8; --color-6: #F7DC6F; --color-7: #BB8FCE; --color-8: #85C1E2;
+        }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0; padding: 0; color: var(--text); background: var(--bg);
+            overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+        }
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000; width: 100%;
+            backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
+            background-color: rgba(251, 251, 253, 0.72); border-bottom: 0.5px solid var(--hairline);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        [data-theme="dark"] .navbar { background-color: rgba(28, 28, 30, 0.72); }
+        .navbar.scrolled { background-color: rgba(251, 251, 253, 0.85); box-shadow: 0 1px 0 0 var(--hairline); }
+        [data-theme="dark"] .navbar.scrolled { background-color: rgba(28, 28, 30, 0.85); }
+        .nav-container {
+            max-width: 1200px; margin: 0 auto; display: flex; align-items: center;
+            justify-content: space-between; padding: 0 24px; height: 44px;
+        }
+        .nav-links { display: flex; align-items: center; gap: 8px; flex: 1; }
+        .navbar a {
+            padding: 8px 12px; color: var(--text); text-decoration: none; font-size: 14px;
+            font-weight: 400; letter-spacing: -0.01em; border-radius: 8px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); position: relative;
+        }
+        .navbar a::after {
+            content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px;
+            background: linear-gradient(90deg, var(--color-1), var(--color-2));
+            transition: all 0.3s ease; transform: translateX(-50%);
+        }
+        .navbar a:hover { color: var(--accent); background-color: rgba(0, 113, 227, 0.08); }
+        .navbar a:hover::after { width: 80%; }
+        [data-theme="dark"] .navbar a:hover { background-color: rgba(10, 132, 255, 0.15); }
+        .toggle-btn {
+            background: transparent; border: 1px solid var(--hairline); color: var(--text);
+            padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 14px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .toggle-btn:hover { background-color: rgba(0, 0, 0, 0.05); border-color: var(--accent); }
+        [data-theme="dark"] .toggle-btn:hover { background-color: rgba(255, 255, 255, 0.1); }
+        .wrap {
+            max-width: 1120px; margin: 0 auto; padding: 120px 20px 80px;
+        }
+        .panel {
+            display: grid; grid-template-columns: 1.2fr 1fr; gap: 64px;
+            background: var(--card); border: 0.5px solid var(--hairline); border-radius: 30px;
+            padding: 64px; box-shadow: 0 4px 20px var(--shadow); position: relative;
+            overflow: hidden; animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .panel:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        .panel::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, var(--color-1), var(--color-2), var(--color-3), var(--color-4));
+            background-size: 300% 100%; animation: gradientMove 3s ease infinite; opacity: 1;
+        }
+        @keyframes gradientMove { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media screen and (max-width: 900px) {
+            .panel { grid-template-columns: 1fr; padding: 48px 32px; gap: 40px; }
+        }
+        h1 {
+            color: var(--heading); font-size: 48px; line-height: 1.08349; font-weight: 700;
+            letter-spacing: -0.003em; margin: 0 0 24px 0;
+            background: linear-gradient(135deg, var(--color-1) 0%, var(--color-2) 25%, var(--color-3) 50%, var(--color-4) 75%, var(--color-1) 100%);
+            background-size: 200% 200%; -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; background-clip: text;
+            animation: gradientText 5s ease infinite;
+        }
+        @keyframes gradientText { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        p {
+            font-size: 19px; line-height: 1.47059; margin: 0 0 12px 0; color: var(--text);
+        }
+        .muted { color: var(--muted); }
+        a { color: var(--accent); text-decoration: none; transition: color 0.2s ease; }
+        a:hover { color: var(--accent-hover); }
+        .cta-row {
+            margin-top: 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+        }
+        .social {
+            margin-top: 24px;
+        }
+        .social a {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 44px; height: 44px; margin-right: 12px; color: white;
+            background: linear-gradient(135deg, var(--color-1), var(--color-2));
+            border-radius: 50%; border: 0.5px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px var(--shadow); position: relative; overflow: hidden;
+        }
+        .social a::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        .social a:hover::before { left: 100%; }
+        .social a:nth-child(1) { background: linear-gradient(135deg, var(--color-3), var(--color-4)); }
+        .social a:nth-child(2) { background: linear-gradient(135deg, var(--color-5), var(--color-6)); }
+        .social a:hover {
+            transform: translateY(-4px) scale(1.1) rotate(5deg);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); filter: brightness(1.1);
+        }
+        .avatar {
+            display: flex; align-items: center; justify-content: center; position: relative;
+        }
+        .orbit {
+            position: absolute; width: 320px; height: 320px; border-radius: 50%;
+            background: conic-gradient(from 0deg, var(--color-1), var(--color-2), var(--color-3), var(--color-4), var(--color-1));
+            filter: blur(20px); opacity: 0.4; animation: float 8s ease-in-out infinite, rotate 15s linear infinite;
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .me {
+            width: 220px; height: 220px; border-radius: 50%; object-fit: cover;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15); border: 4px solid var(--card);
+            position: relative; z-index: 1; animation: float 6s ease-in-out infinite;
+            transition: all 0.3s ease; cursor: pointer;
+        }
+        .me:hover { transform: scale(1.05); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25); }
+        [data-theme="dark"] .me { box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); }
+        .chip {
+            display: inline-flex; align-items: center; gap: 8px; border: none;
+            padding: 12px 20px; border-radius: 22px;
+            background: linear-gradient(135deg, var(--color-7), var(--color-8));
+            color: white; text-decoration: none; font-size: 17px; font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 14px rgba(187, 143, 206, 0.3); position: relative; overflow: hidden;
+        }
+        .chip::before {
+            content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0;
+            border-radius: 50%; background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%); transition: width 0.6s, height 0.6s;
+        }
+        .chip:hover::before { width: 300px; height: 300px; }
+        .chip:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 28px rgba(187, 143, 206, 0.4);
+            background: linear-gradient(135deg, var(--color-8), var(--color-1));
+        }
+        .chip:active { transform: translateY(-1px) scale(1.02); }
+        @media screen and (max-width: 640px) {
+            h1 { font-size: 40px; } .panel { padding: 32px 24px; }
+            .me { width: 180px; height: 180px; }
+            .orbit { width: 260px; height: 260px; }
+        }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <div class="nav-container">
+        <a href="index.html"><i class="fa fa-home"></i> Home</a>
+        <a class="toggle" href="#" id="themeToggle" aria-label="Toggle theme">
+            <button class="toggle-btn"><i class="fa fa-moon"></i></button>
+        </a>
+    </div>
+</div>
+<div class="wrap">
+    <div class="panel">
+        <div>
+            <h1>I'm always up for a chat.</h1>
+            <p>Feel free to reach out if you'd like to discuss opportunities, collaborate on projects, or just have a conversation about technology and innovation.</p>
+            <p><b><a href="mailto:ramalagappan2002@gmail.com">Pop me an email</a></b> at <span class="muted">ramalagappan2002@gmail.com</span></p>
+            <p class="muted">or give me a shout on social media.</p>
+            <div class="social">
+                <a href="https://www.linkedin.com/in/ram-a-?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" aria-label="LinkedIn"><i class="fa fa-linkedin"></i></a>
+                <a href="https://github.com/Ram-8" aria-label="GitHub"><i class="fa fa-github"></i></a>
+            </div>
+            <div class="cta-row">
+                <a class="chip" href="mailto:ramalagappan2002@gmail.com?subject=Hello%20Ram&body=Hi%20Ram,">
+                    <i class="fa fa-envelope"></i> Email Ram
+                </a>
+                <a class="chip" href="tel:+16028041388">
+                    <i class="fa fa-phone"></i> +1 (602) - 804 - 1388
+                </a>
+            </div>
+        </div>
+        <div class="avatar">
+            <div class="orbit"></div>
+            <img class="me" src="Me.jpeg" alt="Ram Alagappan">
+        </div>
+    </div>
+</div>
+<script>
+(function() {
+    function setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        try { localStorage.setItem('theme', theme); } catch (e) {}
+        var icon = document.querySelector('#themeToggle i');
+        if (icon) { icon.className = theme === 'dark' ? 'fa fa-sun' : 'fa fa-moon'; }
+    }
+    var current = document.documentElement.getAttribute('data-theme') || 'light';
+    setTheme(current);
+    var toggle = document.getElementById('themeToggle');
+    if (toggle) {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            var now = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            setTheme(now);
+        });
+    }
+    var navbar = document.querySelector('.navbar');
+    window.addEventListener('scroll', function() {
+        if (window.pageYOffset > 50) { navbar.classList.add('scrolled'); }
+        else { navbar.classList.remove('scrolled'); }
+    });
+    var chips = document.querySelectorAll('.chip');
+    chips.forEach(function(chip) {
+        chip.addEventListener('mousemove', function(e) {
+            var rect = chip.getBoundingClientRect();
+            var x = e.clientX - rect.left - rect.width / 2;
+            var y = e.clientY - rect.top - rect.height / 2;
+            chip.style.transform = 'translate(' + x * 0.15 + 'px, ' + y * 0.15 + 'px)';
+        });
+        chip.addEventListener('mouseleave', function() {
+            chip.style.transform = '';
+        });
+    });
+})();
+</script>
+</body>
+</html>
+
